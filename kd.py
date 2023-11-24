@@ -1,15 +1,13 @@
 import random
-import networkx as nx
-import matplotlib.pyplot as plt
-from collections import deque
+
 
 class Node:
     def __init__(self, point):
         self.point = point
 
 class MNode:
-    def __init__(self, name, left=None, right=None):
-        self.name = name
+    def __init__(self, median, left=None, right=None):
+        self.median = median
         self.left = left
         self.right = right
 
@@ -29,7 +27,7 @@ def build_kd_tree(points, depth=0):
         groesser_als_median = [tupel for tupel in points if tupel[0] >= median]
 
         return MNode(
-            name=median,
+            median=median,
             left=build_kd_tree(kleiner_als_median,depth+1),
             right=build_kd_tree(groesser_als_median,depth+1)
         )
@@ -40,7 +38,7 @@ def build_kd_tree(points, depth=0):
         groesser_als_median = [tupel for tupel in points if tupel[1] >= median]
 
         return MNode(
-                name=median,
+                median=median,
                 left=build_kd_tree(kleiner_als_median, depth + 1),
                 right=build_kd_tree(groesser_als_median, depth + 1)
         )
@@ -50,27 +48,7 @@ def searchKDTree(root,range):
         if root.point[0] in range:
             if root.point[1] in range:
                 return root
-    else:
-        if root.left.name in range:
-            return root.left
 
-def breadth_first_search_kd_tree(root):
-    if not root:
-        return []
-
-    result = []
-    queue = deque([root])
-
-    while queue:
-        current_node = queue.popleft()
-        result.append(current_node.point)  # Hier wird der Wert des Knotens verarbeitet
-
-        if current_node.left:
-            queue.append(current_node.left)
-        if current_node.right:
-            queue.append(current_node.right)
-
-    return result
 
 
 def partition(arr, low, high):
@@ -111,18 +89,24 @@ def find_median(arr):
 
     return randomized_select(arr, 0, len(arr) - 1, median_index)
 
-def drawTree(kdTree):
-    graph=nx.Graph()
-    l=kdTree.left
-    print("na")
+#def drawTree(kdTree):
+#    graph=nx.Graph()
+#    l=kdTree.left
+#    print("na")
 
-
+def get_tree_string(root_node: MNode):
+    if root_node is None:
+        return "Empty"
+    if isinstance(root_node,MNode):
+        return "MNode(" + str(root_node.median) + ", " + str(get_tree_string(root_node.left)) + ", " + str(get_tree_string(root_node.right)) + ")"
+    if isinstance(root_node,Node):
+        return "Node(" +str(root_node.point)
 
 
 # Beispiel
 points = [(2,3), (5,4), (9,6), (4,7), (8,1), (7,2)]
 kd_tree = build_kd_tree(points)
-breadth_first_search_kd_tree(kd_tree)
-drawTree(kd_tree)
+print(get_tree_string(kd_tree))
+#drawTree(kd_tree)
 print("moin")
 
