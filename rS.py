@@ -1,5 +1,9 @@
 import random
 
+
+#todo bereichsuche mit eigenen datentyp region
+#noch klasse tree erstellen die Node und Mnode hat
+
 def partition(arr, low, high):
     pivot_index = random.randint(low, high)
     arr[pivot_index], arr[high] = arr[high], arr[pivot_index]

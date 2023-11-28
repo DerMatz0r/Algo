@@ -1,5 +1,8 @@
 import random
 
+class Tree:
+    def __init__(self, points):
+        self.root = build_kd_tree(points)
 
 class Node:
     def __init__(self, point):
@@ -89,11 +92,6 @@ def find_median(arr):
 
     return randomized_select(arr, 0, len(arr) - 1, median_index)
 
-#def drawTree(kdTree):
-#    graph=nx.Graph()
-#    l=kdTree.left
-#    print("na")
-
 def get_tree_string(root_node: MNode):
     if root_node is None:
         return "Empty"
@@ -102,6 +100,23 @@ def get_tree_string(root_node: MNode):
     if isinstance(root_node,Node):
         return "Node(" +str(root_node.point)
 
+def searchKDTreePoint(root,point,depth=0):
+    if isinstance(root,MNode):
+        if (depth % 2 == 0):
+            if(point[0]<root.median):
+                searchKDTreePoint(root.left,point,depth+1)
+            else:
+                searchKDTreePoint(root.right,point,depth+1)
+        else:
+            if (point[1] < root.median):
+                searchKDTreePoint(root.left, point, depth + 1)
+            else:
+                searchKDTreePoint(root.right, point, depth + 1)
+    else:
+        if(point[0]==root.point[0] and point[1]==root.point[1]):
+            return True
+        else:
+            return False
 
 # Beispiel
 points = [(2,3), (5,4), (9,6), (4,7), (8,1), (7,2)]
