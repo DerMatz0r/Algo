@@ -4,15 +4,28 @@ class Tree:
     def __init__(self, points):
         self.root = build_kd_tree(points)
 
+    def print(self):
+        print(get_tree_string(self.root))
+
+    def searchKDTreePoint(self,point):
+        searchKDTreePoint(self.root,point)
+
 class Node:
     def __init__(self, point):
         self.point = point
 
-class MNode:
+class Leaf:
     def __init__(self, median, left=None, right=None):
         self.median = median
         self.left = left
         self.right = right
+
+class range:
+    def __init__(self, numbers):
+        if len(numbers) != 2:
+            raise ValueError("Die Liste muss genau zwei Zahlen enthalten.")
+
+        self.number1, self.number2 = numbers
 
 def build_kd_tree(points, depth=0):
     if not points:
@@ -29,7 +42,7 @@ def build_kd_tree(points, depth=0):
         kleiner_als_median = [tupel for tupel in points if tupel[0] < median]
         groesser_als_median = [tupel for tupel in points if tupel[0] >= median]
 
-        return MNode(
+        return Leaf(
             median=median,
             left=build_kd_tree(kleiner_als_median,depth+1),
             right=build_kd_tree(groesser_als_median,depth+1)
@@ -40,7 +53,7 @@ def build_kd_tree(points, depth=0):
         kleiner_als_median = [tupel for tupel in points if tupel[1] < median]
         groesser_als_median = [tupel for tupel in points if tupel[1] >= median]
 
-        return MNode(
+        return Leaf(
                 median=median,
                 left=build_kd_tree(kleiner_als_median, depth + 1),
                 right=build_kd_tree(groesser_als_median, depth + 1)
@@ -92,16 +105,16 @@ def find_median(arr):
 
     return randomized_select(arr, 0, len(arr) - 1, median_index)
 
-def get_tree_string(root_node: MNode):
+def get_tree_string(root_node: Leaf):
     if root_node is None:
         return "Empty"
-    if isinstance(root_node,MNode):
+    if isinstance(root_node, Leaf):
         return "MNode(" + str(root_node.median) + ", " + str(get_tree_string(root_node.left)) + ", " + str(get_tree_string(root_node.right)) + ")"
     if isinstance(root_node,Node):
         return "Node(" +str(root_node.point)
 
 def searchKDTreePoint(root,point,depth=0):
-    if isinstance(root,MNode):
+    if isinstance(root, Leaf):
         if (depth % 2 == 0):
             if(point[0]<root.median):
                 searchKDTreePoint(root.left,point,depth+1)
@@ -120,7 +133,7 @@ def searchKDTreePoint(root,point,depth=0):
 
 # Beispiel
 points = [(2,3), (5,4), (9,6), (4,7), (8,1), (7,2)]
-kd_tree = build_kd_tree(points)
+kd_tree = Tree(points)
 print(get_tree_string(kd_tree))
 #drawTree(kd_tree)
 print("moin")
