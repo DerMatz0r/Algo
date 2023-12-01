@@ -20,12 +20,42 @@ class Leaf:
         self.left = left
         self.right = right
 
-class range:
-    def __init__(self, numbers):
-        if len(numbers) != 2:
-            raise ValueError("Die Liste muss genau zwei Zahlen enthalten.")
 
-        self.number1, self.number2 = numbers
+class Range:
+    def __init__(self, intervals):
+        if len(intervals) != 2:
+            raise ValueError("Die Anzahl der Intervalle muss zwei sein.")
+
+        self.intervals = intervals
+
+    def is_fully_contained(self, median):
+        for i in range(2):
+            if not (self.intervals[i][0] < median < self.intervals[i][1]):
+                return False
+        return True
+
+    def is_intersect(self, median):
+        for i in range(2):
+            if not (self.intervals[i][0] <= median <= self.intervals[i][1]):
+                return False
+        return True
+
+
+# Beispiel der Verwendung
+try:
+    my_range = Range([[2, 5], [3, 7]])
+
+    # Testen der is_fully_contained-Methode
+    print(my_range.is_fully_contained([3, 4]))  # True
+    print(my_range.is_fully_contained([6, 4]))  # False
+
+    # Testen der is_intersect-Methode
+    print(my_range.is_intersect([4, 5]))  # True
+    print(my_range.is_intersect([1, 8]))  # False
+
+except ValueError as e:
+    print(f"Fehler beim Erstellen der Range: {e}")
+
 
 def build_kd_tree(points, depth=0):
     if not points:
