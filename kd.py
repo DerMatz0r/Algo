@@ -160,6 +160,21 @@ def searchKDTreePoint(root,point,depth=0):
             return True
         else:
             return False
+def rangeSearch(root,range:Range):
+    if isinstance(root, Leaf):
+        return root
+    else:
+        if range.is_fully_contained(root.left.median)==True:
+            return root.left
+        else:
+            if range.is_intersect(root.left.median)==True:
+                rangeSearch(root.left,range)
+        if(range.is_fully_contained(root.right.median)==True):
+            return root.right
+        else:
+            if(range.is_intersect(root.right.median)):
+                return rangeSearch(root.right,range)
+
 
 # Beispiel
 points = [(2,3), (5,4), (9,6), (4,7), (8,1), (7,2)]
